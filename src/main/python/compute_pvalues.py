@@ -3,19 +3,19 @@ import numpy
 import os
 from scipy import stats
 
-DIST_DIR = '/titan/cancerregulome9/workspaces/users/trobinso/kde2/results'
-TARGET_DIR = '/titan/cancerregulome9/workspaces/users/trobinso/xargs2'
+DIST_DIR = 'my_dist'
+TARGET_DIR = 'my_target'
 OUTFILE = 'scored_regions.out'
 FILTER_P = 0.01
 INFINITY = float('inf')
 
-chrs = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','X','Y']
+chrs = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','X','Y','M']
 datapoints = {}
 
 for filename in os.listdir(DIST_DIR):
-    if filename[0:3] == 'chr':
+    if filename[0:3].lower() == 'chr':
         id = filename.split('_')[0].replace('chr','')
-        if id in chrs:
+        if id.upper() in chrs:
             print filename
             file = open(os.path.join(DIST_DIR,filename), 'r')
             line = '\n'
@@ -37,7 +37,7 @@ for key in datapoints:
 
 outfile = open(os.path.join(TARGET_DIR,OUTFILE),'w')
 for filename in os.listdir(TARGET_DIR):
-    if filename[0:3] == 'chr':
+    if filename[0:3].lower() == 'chr':
         id = filename.split('_')[0].replace('chr','')
         print filename
         file = open(os.path.join(TARGET_DIR,filename), 'r')
@@ -46,7 +46,7 @@ for filename in os.listdir(TARGET_DIR):
             line = file.readline()
             split = line.split('\t')
             
-            if id in chrs and len(split) > 7:
+            if id.upper() in chrs and len(split) > 7:
                 score = float(split[5])
                 if datapoints[split[7]] != None: 
                     pvalue = (datapoints[split[7]]).integrate_box_1d(score,INFINITY)
