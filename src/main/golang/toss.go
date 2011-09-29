@@ -83,7 +83,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
+  defer fo.Close()
+  
 	reader := bufio.NewReader(fo)
 	for {
 		line, ispre, err := reader.ReadLine()
