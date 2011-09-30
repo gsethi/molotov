@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"flag"
 	"os"
 	"bufio"
@@ -65,6 +66,7 @@ func main() {
 	flag.StringVar(&collection, "c", "locations", "The name of the collection to load data into.")
 	flag.Parse()
 
+	fmt.Printf("Connection to mongo.\n")
 	//open connection to mongo
 	session, err := mgo.Mongo(mongo)
 	if err != nil {
@@ -75,16 +77,18 @@ func main() {
 	// Optional. Switch the session to a monotonic behavior.
 	//session.SetMode(mgo.Monotonic, true)
 
+	fmt.Printf("Opening collection.\n")
 	//select db and collection to use
 	c := session.DB(dbname).C(collection)
 
+	fmt.Printf("Opening file.\n")
 	//open file
 	fo, err := os.Open(file)
 	if err != nil {
 		panic(err)
 	}
-  defer fo.Close()
-  
+	defer fo.Close()
+
 	reader := bufio.NewReader(fo)
 	for {
 		line, ispre, err := reader.ReadLine()
